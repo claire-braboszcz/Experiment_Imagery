@@ -176,7 +176,8 @@ vivid_quest = visual.TextStim(win,
         name = 'vividquest', 
         text = 'In overall, how vivid were your mental images ?\n\n',
         height= 0.07, 
-        units= 'norm'
+        units= 'norm',
+        color = 'grey'  
         )
 
 vividRatingScale= visual.RatingScale (win, 
@@ -186,14 +187,15 @@ vividRatingScale= visual.RatingScale (win,
         markerStart = 3,
         leftKeys = 'z',
         rightKeys = 'c',
-        acceptKeys= 'x'
+        acceptKeys= 'x' 
        )
 
 eff_quest = visual.TextStim(win, 
         name = 'effquest', 
         text = 'In overall, how effortful was it to generate the mental images ?\n\n',
         height= 0.07, 
-        units= 'norm'
+        units= 'norm', 
+        color = 'grey'
         )
 
 effRatingScale= visual.RatingScale (win, 
@@ -203,7 +205,7 @@ effRatingScale= visual.RatingScale (win,
         markerStart = 3,
         leftKeys = 'z',
         rightKeys = 'c',
-        acceptKeys= 'x'
+        acceptKeys= 'x' 
         )
 
 #instrPracticeClock = core.Clock()
@@ -335,7 +337,7 @@ def start_trial(fix_duration):
 def takepause(trigg):
     pause1.draw()
     win.flip()
-    core.wait(9)
+    core.wait(5)
     pause2.draw()
     win.flip()
     event.waitKeys()
