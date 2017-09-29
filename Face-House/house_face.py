@@ -6,7 +6,7 @@ from ctypes import windll
 print(__doc__)
 
 
-stimpath= 'C:\\Users\\Claire\\Desktop\\Face-House\\Stimuli\\'
+stimpath= 'C:\\Users\\Claire\\Desktop\\Experiment_Imagery\\Face-House\\Stimuli\\'
 #vismaskpath = '/home/claire/Documents/Experiment/Imagery/Clips/Animal/'
 #pixpath = '/home/claire/Documents/Experiment/Imagery/Frames/Animals/cat_frame.png' 
 
@@ -38,7 +38,7 @@ trig_space=60
 trig_gabor = 70
 
 #---------------------------------------
-# Store info about the experiment session
+# Store info about the experiment session 
 #---------------------------------------
 expName = 'MI_House_Face'  
 expInfo = {'participant':''}
@@ -71,7 +71,10 @@ trials.data.addDataType('respTime')
 trials.data.addDataType('stimOnset')
 trials.data.addDataType('imOnset')
 trials.data.addDataType('imStop')
-
+trials.data.addDataType('scale1')
+trials.data.addDataType('RTscale1')
+trials.data.addDataType('scale2')
+trials.data.addDataType('RTscale2')
 
 #----------------
 # Set up logging 
@@ -165,6 +168,43 @@ keyStop = ['x']
 # Setup text messages
 #--------------------------------------- 
 
+#-------------------------------------------------------------
+# Define rating scale and questionnaire after each MI trial 
+#-------------------------------------------------------------
+
+vivid_quest = visual.TextStim(win, 
+        name = 'vividquest', 
+        text = 'In overall, how vivid were your mental images ?\n\n',
+        height= 0.07, 
+        units= 'norm'
+        )
+
+vividRatingScale= visual.RatingScale (win, 
+       # choices= ['1 \n no image at all','2', '3', '4', '5\n very vivid'],
+        low=1,
+        high=5,
+        markerStart = 3,
+        leftKeys = 'z',
+        rightKeys = 'c',
+        acceptKeys= 'x'
+       )
+
+eff_quest = visual.TextStim(win, 
+        name = 'effquest', 
+        text = 'In overall, how effortful was it to generate the mental images ?\n\n',
+        height= 0.07, 
+        units= 'norm'
+        )
+
+effRatingScale= visual.RatingScale (win, 
+        #choices= [' 1 \n not effortful at all','2', '3', '4', '5 \n very effortful'], 
+        low=1,
+        high=5,
+        markerStart = 3,
+        leftKeys = 'z',
+        rightKeys = 'c',
+        acceptKeys= 'x'
+        )
 
 #instrPracticeClock = core.Clock()
 stim_block_instr = visual.TextStim(win=win, ori=0, name='image_instr',
@@ -215,9 +255,31 @@ keyStop = ['x']
 mouse= event.Mouse()
 
 #-------------------------------------------------------------
-# Define rating scale and questionnaire after each MI trial 
+# Define rating scale and questionnaire 
 #-------------------------------------------------------------
+def pheno():
+    #event.clear(Events)
+    fixation()
+    while vividRatingScale.noResponse: 
+        vivid_quest.draw()
+        vividRatingScale.draw()
+        win.flip()
+      
+        
+    while effRatingScale.noResponse: 
+        eff_quest.draw()
+        effRatingScale.draw()
+        win.flip()
+            
 
+
+    trials.addData('scale1', vividRatingScale.getRating())
+    trials.addData('RTscale1', vividRatingScale.getRT())
+    trials.addData('scale2', effRatingScale.getRating())
+    trials.addData('RTscale2',  effRatingScale.getRT())
+
+    vividRatingScale.reset()
+    effRatingScale.reset()
 
 
 def percept_instruction():
@@ -383,7 +445,10 @@ for thisTrial in trials:
     elif thisTrial['Stim'] == 'START-BLOC' and thisTrial['Run'] == 'imagery':
         send_trigger(int(thisTrial['Trigger_Stim']))
         imagery_instruction()
-    elif thisTrial['Stim'] == 'break':
+    elif thisTrial['Stim'] == 'break'and thisTrial['Run'] == 'percept':
+        takepause(int(thisTrial['Trigger_Stim']))
+    elif thisTrial['Stim'] == 'break'and thisTrial['Run'] == 'imagery':
+        pheno()
         takepause(int(thisTrial['Trigger_Stim']))
     elif thisTrial['Stim'] == 'END-BLOC':
         end_block_instruction(int(thisTrial['Trigger_Stim']))
