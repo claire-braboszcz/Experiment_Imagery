@@ -452,7 +452,10 @@ for thisTrial in trials:
     elif thisTrial['Stim'] == 'break'and thisTrial['Run'] == 'imagery':
         pheno()
         takepause(int(thisTrial['Trigger_Stim']))
-    elif thisTrial['Stim'] == 'END-BLOC':
+    elif thisTrial['Stim'] == 'END-BLOC'and thisTrial['Run'] == 'imagery':
+        pheno()
+        end_block_instruction(int(thisTrial['Trigger_Stim']))
+    elif  thisTrial['Stim'] == 'END-BLOC'and thisTrial['Run'] == 'percept':
         end_block_instruction(int(thisTrial['Trigger_Stim']))
     elif thisTrial['Cue'] == 'catch.png':
          catch_trial(stimpath, thisTrial['Cue'],thisTrial['Trigger_Cue'])
